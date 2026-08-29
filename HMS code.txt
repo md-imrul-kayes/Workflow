@@ -1,0 +1,109 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class Patient {
+public:
+    string patientId;
+    string name;
+    int age;
+    string disease;
+
+    Patient(string id, string n, int a, string d) {
+        patientId = id;
+        name = n;
+        age = a;
+        disease = d;
+    }
+};
+
+class Doctor {
+public:
+    string doctorId;
+    string name;
+    string specialization;
+
+    Doctor(string id, string n, string spec) {
+        doctorId = id;
+        name = n;
+        specialization = spec;
+    }
+};
+
+class HospitalSystem {
+private:
+    vector<Patient> patients;
+    vector<Doctor> doctors;
+    vector<pair<string, string>> appointments;
+
+public:
+    HospitalSystem() {
+        // Default doctors
+        doctors.push_back(Doctor("D1", "Dr. Ahmed", "Cardiologist"));
+        doctors.push_back(Doctor("D2", "Dr. Rahman", "Neurologist"));
+    }
+
+    void addPatient(string id, string name, int age, string disease) {
+        patients.push_back(Patient(id, name, age, disease));
+        cout << "Patient " << name << " successfully added!\n";
+    }
+
+    void viewDoctors() {
+        cout << "\n--- Available Doctors ---\n";
+        for (const auto& doc : doctors) {
+            cout << "ID: " << doc.doctorId << " | Name: " << doc.name << " | Specialization: " << doc.specialization << "\n";
+        }
+    }
+
+    void bookAppointment(string patientId, string doctorId) {
+        string pName = "", dName = "";
+        
+        for (const auto& p : patients) {
+            if (p.patientId == patientId) {
+                pName = p.name;
+                break;
+            }
+        }
+
+        for (const auto& d : doctors) {
+            if (d.doctorId == doctorId) {
+                dName = d.name;
+                break;
+            }
+        }
+
+        if (!pName.empty() && !dName.empty()) {
+            appointments.push_back({pName, dName});
+            cout << "Appointment booked: " << pName << " with " << dName << "\n";
+        } else {
+            cout << "Invalid Patient ID or Doctor ID!\n";
+        }
+    }
+
+    void viewAppointments() {
+        cout << "\n--- All Appointments ---\n";
+        for (const auto& app : appointments) {
+            cout << "Patient: " << app.first << " --> Doctor: " << app.second << "\n";
+        }
+    }
+};
+
+int main() {
+    HospitalSystem hospital;
+
+    // Doctor list dekha
+    hospital.viewDoctors();
+
+    // Patient add kora
+    hospital.addPatient("P1", "Karim Hossain", 30, "Chest Pain");
+
+    // Appointment book kora
+    hospital.book_appointment("P1", "D1");
+
+    // Appointment list dekha
+    hospital.view_appointments();
+
+    return 0;
+}
